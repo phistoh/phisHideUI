@@ -1,7 +1,7 @@
-## Interface: 73000
+## Interface: 80000
 ## Title: phisHideUI
 ## Description: Hides all currently displayed player/enemy/... names and pet track icons on hiding the UI
 ## Author: phistoh
-## Version: 1.1
+## Version: 1.1.1
 
 phisHideUI.lua
