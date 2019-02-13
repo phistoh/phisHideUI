@@ -35,7 +35,9 @@ local phis_name_cvars = {
 local phis_names_to_toggle = {}
 local phis_pettracking = false
 local phis_names_not_restored = false
+-- used to bind scripts and watch status of UI (shown/hidden)
 local phis_f = CreateFrame('Frame', 'phisCheckFrame', UIParent)
+
 
 -------------------------
 -- AUXILIARY FUNCTIONS --
@@ -162,6 +164,28 @@ local function phis_auto_restore(self, event, ...)
 		phis_toggle_names_on()
 	end
 end
+
+-------------------------
+--    OPTIONS PANEL    --
+-------------------------
+
+local phis_options = CreateFrame('Frame', 'phisOptionsFrame', InterfaceOptionsFramePanelContainer)
+phis_options.name = GetAddOnMetadata('phisHideUI','Title')
+InterfaceOptions_AddCategory(phis_options)
+phis_options:SetScript('OnShow', function()
+	local phis_title_string = phis_options:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+	phis_title_string:SetPoint('TOP', 0, -10)
+	phis_title_string:SetText(GetAddOnMetadata('phisHideUI','Title')..' v'..GetAddOnMetadata('phisHideUI','Version'))
+
+	local phis_button_pettracking = CreateFrame('CheckButton', 'phisButtonPetTracking', phis_options, 'UICheckButtonTemplate')
+	phis_button_pettracking:SetPoint('TOPLEFT', 10, -35)
+	phis_button_pettracking.tooltip = 'Check to enable automatic hiding of the pet tracking icons on UI hide'
+	_G['phisButtonPetTrackingText']:SetText(' Pet tracking icons')
+end)
+
+-------------------------
+--        EVENTS       --
+-------------------------
 
 -- to check if the player left combat to automatically restore non-restored names
 phis_f:RegisterEvent('PLAYER_REGEN_ENABLED')
