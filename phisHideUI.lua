@@ -68,7 +68,7 @@ local function phis_toggle_names_off()
 	end
 	
 	-- toggle unit names if the option is enabled
-	if phis_toggle_unitnames then
+	if phisHideUISavedVars['phis_toggle_unitnames'] then
 		-- iterate through the table, store all currently displayed names and hide them
 		for k,v in pairs(phis_name_cvars) do
 			-- GetCVar returns a string and not a number...
@@ -80,7 +80,7 @@ local function phis_toggle_names_off()
 	end
 	
 	-- toggle the chat bubbles if the option is enabled
-	if phis_toggle_chatbubbles then
+	if phisHideUISavedVars['phis_toggle_chatbubbles'] then
 		for k,v in pairs({'chatBubbles','chatBubblesParty'}) do
 			-- GetCVar returns a string and not a number...
 			if GetCVar(v) == '1' then
@@ -91,7 +91,7 @@ local function phis_toggle_names_off()
 	end
 	
 	-- if pet tracking should be toggled check if pet tracking is currently active and disable it
-	if phis_toggle_pettracking then
+	if phisHideUISavedVars['phis_toggle_pettracking'] then
 		-- iterates through all trackable things to finde battle pets
 		for i=1,GetNumTrackingTypes() do
 			-- a is 1 if the tracking is active, else it is nil
@@ -125,7 +125,7 @@ local function phis_toggle_names_on()
 	phis_names_to_toggle={}
 	
 	-- enables pet tracking if it should be toggled and was enabled before
-	if phis_toggle_pettracking and phis_pettracking then
+	if phisHideUISavedVars['phis_toggle_pettracking'] and phis_pettracking then
 		for i=1,GetNumTrackingTypes() do
 			n = GetTrackingInfo(i)
 			if n == 'Track Pets' then

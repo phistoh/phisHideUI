@@ -20,3 +20,4 @@ This addon automatically hides (and restores) names/chat bubbles/pet tracking ic
 - [ ] Check if only specific cvars are not settable in combat (so no combat check is needed)
 - [ ] Automatically change graphics settings
 - [ ] Options page in Blizzard addons settings (hide/show names, pet tracking, chat bubbles, graphics settings (potentially))
+- [ ] Save temporary variables in chracter specific saved variable (to prevent losing settings on logging out in between hiding/showing UI)
