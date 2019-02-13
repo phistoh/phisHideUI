@@ -9,6 +9,7 @@ This addon automatically hides (and restores) names/chat bubbles/pet tracking ic
 - **phiHideUI.toc** is the standard WoW table-of-contents file containing addon information
 
 ## Changes
+- ** 1.1.2**: Update Interface number for BfA Tides of Vengeanve (8.1)
 - **1.1.1**: Update for BfA prepatch
 - **1.1**: Only sets cvars out of combat
 - **1.0**: Initial upload
