@@ -1,15 +1,16 @@
-# phiHideUI
+# phisHideUI
 WoW addon which hides names/chat bubbles/pet tracking icons when hiding the interface
 
 ## Usage
 This addon automatically hides (and restores) names/chat bubbles/pet tracking icons when the UIParent frame is hidden. When the UI gets hidden out of combat and shown again in combat, the names will be restored automatically after the combat ends.
 
 ## File Description
-- **phiHideUI.lua** contains the main code
-- **phiHideUI.toc** is the standard WoW table-of-contents file containing addon information
+- **phisHideUI.lua** contains the main code
+- **phisHideUI.toc** is the standard WoW table-of-contents file containing addon information
 
 ## Changes
-- ** 1.1.2**: Update Interface number for BfA Tides of Vengeanve (8.1)
+- ** 1.2**: Includes options to change what to toggle on UI hide (stored via WoW's saved variables)
+- ** 1.1.2**: Update Interface number for BfA Tides of Vengeance (8.1)
 - **1.1.1**: Update for BfA prepatch
 - **1.1**: Only sets cvars out of combat
 - **1.0**: Initial upload
