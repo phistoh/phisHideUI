@@ -140,9 +140,13 @@ local function phis_toggle_names_on()
 end
 
 -- iterates over the default options table and inserts any not yet saved option into the saved variables
-local function phis_update_config(self, event, ...)
-	-- when ADDON_LOADED is fired the relevant saved variables are also loaded
-	if event == 'ADDON_LOADED' then
+local function phis_update_config(self, event)
+	if event == 'PLAYER_LOGIN' then
+		-- first time loading the addon
+		if not phisHideUISavedVars then
+			print(GetAddOnMetadata('phisHideUI','Title')..' v'..GetAddOnMetadata('phisHideUI','Version')..' loaded for the first time.')
+			phisHideUISavedVars = {}
+		end
 		for k,v in pairs(phis_defaults) do
 			if phisHideUISavedVars[k] == nil then
 				-- deep copy instead of copying the reference
@@ -158,7 +162,7 @@ local function phis_update_config(self, event, ...)
 end
 
 -- restores all names after combat ends and clears the phis_names_not_restored flag
-local function phis_auto_restore(self, event, ...)
+local function phis_auto_restore(self, event)
 	if event == 'PLAYER_REGEN_ENABLED' and phis_names_not_restored then
 		phis_names_not_restored = false
 		phis_toggle_names_on()
@@ -173,14 +177,55 @@ local phis_options = CreateFrame('Frame', 'phisOptionsFrame', InterfaceOptionsFr
 phis_options.name = GetAddOnMetadata('phisHideUI','Title')
 InterfaceOptions_AddCategory(phis_options)
 phis_options:SetScript('OnShow', function()
+
+	-- save current vars in case of hitting cancel
+	-- local temp_settings = {}
+	-- phis_aux_copy_table(phisHideUISavedVars, temp_settings)
+
 	local phis_title_string = phis_options:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
-	phis_title_string:SetPoint('TOP', 0, -10)
-	phis_title_string:SetText(GetAddOnMetadata('phisHideUI','Title')..' v'..GetAddOnMetadata('phisHideUI','Version'))
+	phis_title_string:SetPoint('TOPLEFT', 10, -10)
+	phis_title_string:SetText(GetAddOnMetadata('phisHideUI','Title'))
+	
+	local phis_version_string = phis_options:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
+	phis_version_string:SetPoint('BOTTOMLEFT', phis_title_string, 'BOTTOMRIGHT', 4, 0)
+	phis_version_string:SetText('v'..GetAddOnMetadata('phisHideUI','Version'))
+	
+	local phis_description_string = phis_options:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	phis_description_string:SetPoint('TOPLEFT', phis_title_string, 'BOTTOMLEFT', 0, -10)
+	phis_description_string:SetJustifyH('LEFT')
+	phis_description_string:SetWidth(InterfaceOptionsFramePanelContainer:GetWidth() - 40)
+	phis_description_string:SetNonSpaceWrap(true)
+	phis_description_string:SetText(GetAddOnMetadata('phisHideUI','Notes'))
 
 	local phis_button_pettracking = CreateFrame('CheckButton', 'phisButtonPetTracking', phis_options, 'UICheckButtonTemplate')
-	phis_button_pettracking:SetPoint('TOPLEFT', 10, -35)
+	phis_button_pettracking:SetPoint('TOPLEFT', phis_description_string, 'BOTTOMLEFT', 0, -10)
 	phis_button_pettracking.tooltip = 'Check to enable automatic hiding of the pet tracking icons on UI hide'
 	_G['phisButtonPetTrackingText']:SetText(' Pet tracking icons')
+	_G['phisButtonPetTrackingText']:SetFontObject('GameFontNormal')
+	
+	local phis_button_chatbubbles = CreateFrame('CheckButton', 'phisButtonChatbubbles', phis_options, 'UICheckButtonTemplate')
+	phis_button_chatbubbles:SetPoint('TOPLEFT', phis_button_pettracking, 'BOTTOMLEFT', 0, -10)
+	phis_button_chatbubbles.tooltip = 'Check to enable automatic hiding of chat bubbles on UI hide'
+	_G['phisButtonChatbubblesText']:SetText(' Chat bubbles')
+	_G['phisButtonChatbubblesText']:SetFontObject('GameFontNormal')
+	
+	
+	local phis_button_unitnames = CreateFrame('CheckButton', 'phisButtonUnitNames', phis_options, 'UICheckButtonTemplate')
+	phis_button_unitnames:SetPoint('TOPLEFT', phis_button_chatbubbles, 'BOTTOMLEFT', 0, -10)
+	phis_button_unitnames.tooltip = 'Check to enable automatic hiding of unit names on UI hide'
+	_G['phisButtonUnitNamesText']:SetText(' Unit names')
+	_G['phisButtonUnitNamesText']:SetFontObject('GameFontNormal')
+	
+	-- -- save to saved variables on 'Okay'
+	-- function phis_options.okay()
+		-- phisHideUISavedVars['phis_toggle_pettracking'] = phis_button_pettracking:GetChecked()
+		-- print(phis_button_pettracking:GetChecked())
+	-- end
+	
+	-- -- discard changes on 'Cancel' (or Escape)
+	-- function phis_options.cancel()
+		-- phis_aux_copy_table(temp_settings, phisHideUISavedVars)
+	-- end
 end)
 
 -------------------------
@@ -191,7 +236,7 @@ end)
 phis_f:RegisterEvent('PLAYER_REGEN_ENABLED')
 
 -- to update the saved variables
-phis_f:RegisterEvent('ADDON_LOADED')
+phis_f:RegisterEvent('PLAYER_LOGIN')
 
 -- register to OnShow/OnHide handlers
 phis_f:SetScript('OnShow', phis_toggle_names_on)
