@@ -1,8 +1,8 @@
 # phisHideUI
- An WoW addon thich hides all currently displayed unit names, chat bubbles and pet tracking icons when hiding the UI (e.g. with 'Alt-Z'). It also includes an option to automatically switch the graphics settings to high quality (with optional supersampling) when the UI is hidden.
+ A WoW addon which hides all currently displayed unit names, chat bubbles and pet tracking icons when hiding the UI (e.g. with 'Alt-Z'). It also includes an option to automatically switch the graphics settings to high quality (with optional supersampling) when the UI is hidden.
 
 ## Usage
-This addon does its work automatically when the UIParent frame is hidden. When the UI gets hidden while the player is out of combat and shown after the player has entered combat, the names will be restored automatically after the combat ends. The addon provides two slash commands: `/phishideui config` to open the options panel and `/phishideui graphics` to manually toggle between high and default graphics. (Instead of `/phishideui` the commands `/phide` and `/phui` can be used.)
+This addon does its work automatically when the UIParent frame is hidden. When the UI gets hidden while the player is out of combat and shown again when the player is currently in combat, the names will be restored automatically after the combat ends. The addon provides two slash commands: `/phishideui config` to open the options panel and `/phishideui graphics` to manually toggle between high and default graphics. (The commands `/phide` and `/phui` can be used instead of `/phishideui`.)
 
 ## File Description
 - **phisHideUI.lua** contains the main code
