@@ -9,6 +9,7 @@ local names_to_toggle = {}
 local graphics_settings = {}
 local pettracking = false
 local names_not_restored = false
+local graphics_quality_flag = false
 
 -- used to bind scripts and watch status of UI (shown/hidden)
 local f = CreateFrame('Frame', 'phisCheckFrame', UIParent)
@@ -22,7 +23,6 @@ local function toggle_graphics(high_quality)
 	if high_quality then
 		for k,v in pairs(phis.graphics) do
 			graphics_settings[k] = GetCVar(k)
-			-- phisHideUISavedVars['Backup graphics'] = phis.deep_copy(graphics_settings, phisHideUISavedVars['Backup graphics'])
 			SetCVar(k,v)
 		end
 		
@@ -44,7 +44,7 @@ local function toggle_graphics(high_quality)
 		end
 	else
 		for k,v in pairs(phis.graphics) do
-			SetCVar(k,v) = graphics_settings[k]
+			SetCVar(k,graphics_settings[k])
 		end
 		
 		if phisHideUISavedVars['Supersampling'] then
@@ -205,7 +205,7 @@ options:SetScript('OnShow', function()
 		local checkbox = CreateFrame('CheckButton', k..'CheckButton', options, 'UICheckButtonTemplate')
 		checkbox:SetPoint('TOPLEFT', current_anchor, 'BOTTOMLEFT', 0, -10)
 		checkbox:SetChecked(phisHideUISavedVars[k])
-		_G[k..'CheckButtonText']:SetText(k)
+		_G[k..'CheckButtonText']:SetText(' '..k)
 		_G[k..'CheckButtonText']:SetFontObject('GameFontNormal')
 		checkbox:SetScript('OnClick', function()
 			-- when 'OnClick' runs, GetChecked() already returns the new status
@@ -219,26 +219,30 @@ options:SetScript('OnShow', function()
 	end
 	
 	function options.default()
-		for k in pairs(phis.defaults) do
+		for k,v in pairs(phis.defaults) do
+			phisHideUISavedVars[k] = v
 			checkboxes[k]:SetChecked(phisHideUISavedVars[k])
 		end
 	end
 	
 	-- -- save to saved variables on 'Okay'
 	-- function options.okay()
-		-- phisHideUISavedVars['toggle_pettracking'] = button_pettracking:GetChecked()
-		-- print(button_pettracking:GetChecked())
+
 	-- end
 	
-	-- -- discard changes on 'Cancel' (or Escape)
+	-- discard changes on 'Cancel' (or Escape)
 	-- function options.cancel()
-		-- aux_copy_table(temp_settings, phisHideUISavedVars)
-	-- end
-	
-	-- -- 
-	-- function options.refresh()
 	
 	-- end
+	
+	function options.refresh()
+		for k in pairs(phis.defaults) do
+			checkboxes[k]:SetChecked(phisHideUISavedVars[k])
+		end
+	end
+	
+	options:SetScript('OnShow', nil)
+	options.refresh()
 end)
 
 -------------------------
@@ -250,7 +254,6 @@ SLASH_PHUI2 = '/phide'
 SLASH_PHUI3 = '/phui'
 
 SlashCmdList['PHUI'] = function(msg)
-	graphics_quality_flag = false
 	if msg:lower() == 'options' or msg:lower() == 'config' then
 		-- first call opens addon options menu, second call switches to the actual panel
 		InterfaceOptionsFrame_OpenToCategory(addonName)
