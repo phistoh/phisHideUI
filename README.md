@@ -7,6 +7,7 @@ This addon does its work automatically when the UIParent frame is hidden. When t
 - `/phishideui graphics` toggles between high and default graphics
 - `/phishideui backup restore` restores the CVar values (using the backup stored in the saved variables)
 - `/phishideui backup overwrite` overwrites the CVar backup with the current CVar values
+
 (The commands `/phide` and `/phui` can be used instead of `/phishideui`.)
 
 ## File Description
@@ -29,5 +30,5 @@ This addon does its work automatically when the UIParent frame is hidden. When t
 - [x] Automatically change graphics settings
 - [x] Options page in Blizzard addons settings (hide/show names, pet tracking, chat bubbles, graphics settings (potentially))
 - [x] Save temporary variables in saved variable (to prevent losing settings on logging out in between hiding/showing UI)
-- [ ] Maybe: Check on login whether the CVar values correspond to the backup and nag the user about restoring or overwriting them
-- [ ] Maybe: Implement `okay` and `cancel` functions in the options panel instead of setting the variables on click
+- [ ] *(Maybe)* Check on login whether the CVar values correspond to the backup and nag the user about restoring or overwriting them
+- [ ] *(Maybe)* Implement `okay` and `cancel` functions in the options panel instead of setting the variables on click
