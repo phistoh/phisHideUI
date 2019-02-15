@@ -25,7 +25,7 @@ local function backup_cvars()
 		settings[v] = GetCVar(v)
 	end
 	for k,v in pairs(phis.graphics) do
-		settings[v] = GetCVar(v)
+		settings[k] = GetCVar(k)
 	end
 	for k,v in pairs({'chatBubbles','chatBubblesParty'}) do
 		settings[v] = GetCVar(v)
@@ -253,32 +253,12 @@ options:SetScript('OnShow', function()
 	
 	--- CHECKBOXES ---
 	local checkboxes = {}
-	checkbox.unitnames = create_checkbox('unitnames', options, description_string, 'Unit names')
-	checkbox.chatbubbles = create_checkbox('chatbubbles', options, checkbox.unitnames, 'Chat bubbles')
-	checkbox.pettracking_icons = create_checkbox('pettracking_icons', options, checkbox.chatbubbles, 'Battle pet tracking icons')
-	checkbox.graphics_settings = create_checkbox('graphics_settings', options, checkbox.pettracking_icons, 'High quality graphics settings')
-	checkbox.anti_aliasing = create_checkbox('anti_aliasing', options, checkbox.graphics_settings, 'Anti aliasing (MSAA + CMAA)')
-	checkbox.supersampling = create_checkbox('supersampling', options, checkbox.anti_aliasing, 'Supersampling (2x)')
-	
-	
-	-- local checkboxes = {}	
-	-- local current_anchor = description_string
-	-- for k in pairs(phis.defaults) do
-		-- local checkbox = CreateFrame('CheckButton', k..'CheckButton', options, 'UICheckButtonTemplate')
-		-- checkbox:SetPoint('TOPLEFT', current_anchor, 'BOTTOMLEFT', 0, -10)
-		-- checkbox:SetChecked(phisHideUISavedVars[k])
-		-- _G[k..'CheckButtonText']:SetText(' '..k)
-		-- _G[k..'CheckButtonText']:SetFontObject('GameFontNormal')
-		-- checkbox:SetScript('OnClick', function()
-			-- -- when 'OnClick' runs, GetChecked() already returns the new status
-			-- checked = checkbox:GetChecked()
-			-- PlaySound(checked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
-			-- phisHideUISavedVars[k] = checked
-		-- end)
-		
-		-- current_anchor = checkbox
-		-- checkboxes[k] = checkbox
-	-- end
+	checkboxes.unitnames = create_checkbox('unitnames', options, description_string, 'Unit names')
+	checkboxes.chatbubbles = create_checkbox('chatbubbles', options, checkboxes.unitnames, 'Chat bubbles')
+	checkboxes.pettracking_icons = create_checkbox('pettracking_icons', options, checkboxes.chatbubbles, 'Battle pet tracking icons')
+	checkboxes.graphics_settings = create_checkbox('graphics_settings', options, checkboxes.pettracking_icons, 'High quality graphics settings')
+	checkboxes.anti_aliasing = create_checkbox('anti_aliasing', options, checkboxes.graphics_settings, 'Anti aliasing (MSAA + CMAA)')
+	checkboxes.supersampling = create_checkbox('supersampling', options, checkboxes.anti_aliasing, 'Supersampling (2x)')
 	
 	function options.default()
 		for k,v in pairs(phis.defaults) do
@@ -286,16 +266,6 @@ options:SetScript('OnShow', function()
 			checkboxes[k]:SetChecked(phisHideUISavedVars[k])
 		end
 	end
-	
-	-- -- save to saved variables on 'Okay'
-	-- function options.okay()
-
-	-- end
-	
-	-- discard changes on 'Cancel' (or Escape)
-	-- function options.cancel()
-	
-	-- end
 	
 	function options.refresh()
 		for k in pairs(phis.defaults) do
@@ -324,9 +294,9 @@ SlashCmdList['PHUI'] = function(msg)
 		graphics_quality_flag = not graphics_quality_flag
 		toggle_graphics(graphics_quality_flag)
 		print('Graphics set to '..(graphics_quality_flag and 'high' or 'default')..'.')
-	elseif msg:lower == 'backup restore' then
+	elseif msg:lower() == 'backup restore' then
 		restore_backup()
-	elseif msg:lower == 'backup overwrite' then
+	elseif msg:lower() == 'backup overwrite' then
 		overwrite_backup()
 	else
 		print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version'))

@@ -41,6 +41,7 @@ phis.unitnames = {
 
 phis.graphics = {
 	['graphicsTextureFiltering'] = 6, -- 16x anisotropic texture filtering
+	['graphicsTextureResolution'] = 3, -- High texture resolution
 	['graphicsProjectedTextures'] = 2, -- Enable projected textures
 	['graphicsViewDistance'] = 10, -- Maximum view distance
 	['graphicsEnvironmentDetail'] = 10, -- Maximum environment detail
