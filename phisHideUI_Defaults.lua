@@ -2,12 +2,18 @@ local addonName, phis = ...
 
 -- default options
 phis.defaults = {
-	['Chat bubbles'] = true,
-	['Pet tracking icons'] = true,
-	['Unit names'] = true,
-	['Graphics settings'] = false,
-	['Supersampling'] = false,
-	['Anti aliasing'] = false,
+	-- ['Chat bubbles'] = true,
+	-- ['Pet tracking icons'] = true,
+	-- ['Unit names'] = true,
+	-- ['Graphics settings'] = false,
+	-- ['Supersampling'] = false,
+	-- ['Anti aliasing'] = false,
+	chatbubbles = true,
+	pettracking_icons = true,
+	unitnames = true,
+	graphics_settings = false,
+	supersampling = false,
+	anti_aliasing = false,
 }
 
 phis.unitnames = {

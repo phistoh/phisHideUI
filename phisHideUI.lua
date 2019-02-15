@@ -18,6 +18,39 @@ local f = CreateFrame('Frame', 'phisCheckFrame', UIParent)
 --   ADDON FUNCTIONS   --
 -------------------------
 
+-- saves the current state of all relevant cvars in a table and returns it
+local function backup_cvars()
+	local settings = {}
+	for k,v in pairs(phis.unitnames) do
+		settings[v] = GetCVar(v)
+	end
+	for k,v in pairs(phis.graphics) do
+		settings[v] = GetCVar(v)
+	end
+	for k,v in pairs({'chatBubbles','chatBubblesParty'}) do
+		settings[v] = GetCVar(v)
+	end
+	return settings
+end
+
+-- overwrites relevant cvars with those stored in the saved variables
+local function restore_backup()
+	if (phisHideUISavedVars.cvarbackup == nil) then
+		print('No backup for CVars found...')
+	else
+		for k,v in pairs(phisHideUISavedVars.cvarbackup) do
+			SetCVar(k,v)
+		end
+		print('CVar backup restored')
+	end
+end
+
+-- used in a slash command
+local function overwrite_backup()
+	phisHideUISavedVars.cvarbackup = backup_cvars()
+	print('Backup overwritten with current CVars')
+end
+
 -- extra function to implement slash command for a macro
 local function toggle_graphics(high_quality)
 	if high_quality then
@@ -26,12 +59,12 @@ local function toggle_graphics(high_quality)
 			SetCVar(k,v)
 		end
 		
-		if phisHideUISavedVars['Supersampling'] then
+		if phisHideUISavedVars.supersampling then
 			graphics_settings['renderscale'] = GetCVar('renderscale')
 			SetCVar('renderscale', 2)
 		end
 		
-		if phisHideUISavedVars['Anti aliasing'] then
+		if phisHideUISavedVars.anti_aliasing then
 			graphics_settings['MSAAQuality'] = GetCVar('MSAAQuality')
 			graphics_settings['MSAAAlphaTest'] = GetCVar('MSAAAlphaTest')
 			graphics_settings['ffxAntiAliasingMode'] = GetCVar('ffxAntiAliasingMode')
@@ -47,11 +80,11 @@ local function toggle_graphics(high_quality)
 			SetCVar(k,graphics_settings[k])
 		end
 		
-		if phisHideUISavedVars['Supersampling'] then
+		if phisHideUISavedVars.supersampling then
 			SetCVar('renderscale', graphics_settings['renderscale'])
 		end
 		
-		if phisHideUISavedVars['Anti aliasing'] then
+		if phisHideUISavedVars.anti_aliasing then
 			SetCVar('MSAAQuality', graphics_settings['MSAAQuality'])
 			SetCVar('MSAAAlphaTest', graphics_settings['MSAAAlphaTest'])
 			SetCVar('ffxAntiAliasingMode', graphics_settings['ffxAntiAliasingMode'])
@@ -69,7 +102,7 @@ local function toggle_names_off()
 	end
 	
 	--- UNIT NAMES ---
-	if phisHideUISavedVars['Unit names'] then
+	if phisHideUISavedVars.unitnames then
 		for k,v in pairs(phis.unitnames) do
 			-- GetCVar returns a string and not a number
 			if GetCVar(v) == '1' then
@@ -80,7 +113,7 @@ local function toggle_names_off()
 	end
 	
 	--- CHAT BUBBLES ---
-	if phisHideUISavedVars['Chat bubbles'] then
+	if phisHideUISavedVars.chatbubbles then
 		for k,v in pairs({'chatBubbles','chatBubblesParty'}) do
 			-- GetCVar returns a string and not a number
 			if GetCVar(v) == '1' then
@@ -91,7 +124,7 @@ local function toggle_names_off()
 	end
 	
 	--- PET TRACKING ICONS ---
-	if phisHideUISavedVars['Pet tracking icons'] then
+	if phisHideUISavedVars.pettracking_icons then
 		-- iterates through all trackable things to find battle pet tracking
 		for i=1,GetNumTrackingTypes() do
 			-- a is 1 if the tracking is active, else it is nil
@@ -108,7 +141,7 @@ local function toggle_names_off()
 	end
 	
 	--- GRAPHICS SETTINGS -- 
-	if phisHideUISavedVars['Graphics settings'] then
+	if phisHideUISavedVars.graphics_settings then
 		toggle_graphics(true)
 	end
 end
@@ -128,7 +161,7 @@ local function toggle_names_on()
 	names_to_toggle={}
 	
 	--- PET TRACKING ICONS ---
-	if phisHideUISavedVars['Pet tracking icons'] and pettracking then
+	if phisHideUISavedVars.pettracking_icons and pettracking then
 		for i=1,GetNumTrackingTypes() do
 			n = GetTrackingInfo(i)
 			if n == 'Track Pets' then
@@ -140,7 +173,7 @@ local function toggle_names_on()
 	end
 	
 	--- GRAPHICS SETTINGS -- 
-	if phisHideUISavedVars['Graphics settings'] then
+	if phisHideUISavedVars.graphics_settings then
 		toggle_graphics(false)
 	end
 end
@@ -152,6 +185,7 @@ local function update_config(self, event)
 		if not phisHideUISavedVars then
 			print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version')..' loaded for the first time.')
 			phisHideUISavedVars = {}
+			phisHideUISavedVars.cvarbackup = backup_cvars()
 		end
 		for k,v in pairs(phis.defaults) do
 			if phisHideUISavedVars[k] == nil then
@@ -179,11 +213,29 @@ end
 --    OPTIONS PANEL    --
 -------------------------
 
+-- creates a checkbox 10 px below 'anchor' and stores its state in phisHideUISavedVars[k]
+local function create_checkbox(k, parent, anchor, text)
+	local checkbox = CreateFrame('CheckButton', k..'CheckButton', parent, 'UICheckButtonTemplate')
+	checkbox:SetPoint('TOPLEFT', anchor, 'BOTTOMLEFT', 0, -10)
+	checkbox:SetChecked(phisHideUISavedVars[k])
+	_G[k..'CheckButtonText']:SetText(' '..text)
+	_G[k..'CheckButtonText']:SetFontObject('GameFontNormal')
+	checkbox:SetScript('OnClick', function()
+		-- when 'OnClick' runs, GetChecked() already returns the new status
+		checked = checkbox:GetChecked()
+		PlaySound(checked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+		phisHideUISavedVars[k] = checked
+	end)
+	
+	return checkbox
+end
+
 local options = CreateFrame('Frame', 'phisOptionsFrame', InterfaceOptionsFramePanelContainer)
 options.name = GetAddOnMetadata(addonName,'Title')
 InterfaceOptions_AddCategory(options)
 options:SetScript('OnShow', function()
 
+	--- HEADER --
 	local title_string = options:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 	title_string:SetPoint('TOPLEFT', 10, -10)
 	title_string:SetText(GetAddOnMetadata(addonName,'Title'))
@@ -199,24 +251,34 @@ options:SetScript('OnShow', function()
 	description_string:SetNonSpaceWrap(true)
 	description_string:SetText(GetAddOnMetadata(addonName,'Notes'))
 	
+	--- CHECKBOXES ---
 	local checkboxes = {}
-	local current_anchor = description_string
-	for k in pairs(phis.defaults) do
-		local checkbox = CreateFrame('CheckButton', k..'CheckButton', options, 'UICheckButtonTemplate')
-		checkbox:SetPoint('TOPLEFT', current_anchor, 'BOTTOMLEFT', 0, -10)
-		checkbox:SetChecked(phisHideUISavedVars[k])
-		_G[k..'CheckButtonText']:SetText(' '..k)
-		_G[k..'CheckButtonText']:SetFontObject('GameFontNormal')
-		checkbox:SetScript('OnClick', function()
-			-- when 'OnClick' runs, GetChecked() already returns the new status
-			checked = checkbox:GetChecked()
-			PlaySound(checked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
-			phisHideUISavedVars[k] = checked
-		end)
+	checkbox.unitnames = create_checkbox('unitnames', options, description_string, 'Unit names')
+	checkbox.chatbubbles = create_checkbox('chatbubbles', options, checkbox.unitnames, 'Chat bubbles')
+	checkbox.pettracking_icons = create_checkbox('pettracking_icons', options, checkbox.chatbubbles, 'Battle pet tracking icons')
+	checkbox.graphics_settings = create_checkbox('graphics_settings', options, checkbox.pettracking_icons, 'High quality graphics settings')
+	checkbox.anti_aliasing = create_checkbox('anti_aliasing', options, checkbox.graphics_settings, 'Anti aliasing (MSAA + CMAA)')
+	checkbox.supersampling = create_checkbox('supersampling', options, checkbox.anti_aliasing, 'Supersampling (2x)')
+	
+	
+	-- local checkboxes = {}	
+	-- local current_anchor = description_string
+	-- for k in pairs(phis.defaults) do
+		-- local checkbox = CreateFrame('CheckButton', k..'CheckButton', options, 'UICheckButtonTemplate')
+		-- checkbox:SetPoint('TOPLEFT', current_anchor, 'BOTTOMLEFT', 0, -10)
+		-- checkbox:SetChecked(phisHideUISavedVars[k])
+		-- _G[k..'CheckButtonText']:SetText(' '..k)
+		-- _G[k..'CheckButtonText']:SetFontObject('GameFontNormal')
+		-- checkbox:SetScript('OnClick', function()
+			-- -- when 'OnClick' runs, GetChecked() already returns the new status
+			-- checked = checkbox:GetChecked()
+			-- PlaySound(checked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+			-- phisHideUISavedVars[k] = checked
+		-- end)
 		
-		current_anchor = checkbox
-		checkboxes[k] = checkbox
-	end
+		-- current_anchor = checkbox
+		-- checkboxes[k] = checkbox
+	-- end
 	
 	function options.default()
 		for k,v in pairs(phis.defaults) do
@@ -262,6 +324,10 @@ SlashCmdList['PHUI'] = function(msg)
 		graphics_quality_flag = not graphics_quality_flag
 		toggle_graphics(graphics_quality_flag)
 		print('Graphics set to '..(graphics_quality_flag and 'high' or 'default')..'.')
+	elseif msg:lower == 'backup restore' then
+		restore_backup()
+	elseif msg:lower == 'backup overwrite' then
+		overwrite_backup()
 	else
 		print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version'))
 		print('Toggle between graphics settings with /phui graphics')
