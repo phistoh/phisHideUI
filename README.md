@@ -17,6 +17,7 @@ This addon does its work automatically when the UIParent frame is hidden. When t
 - **phisHideUI_Utils.lua** contains miscellaneous auxiliary functions
 
 ## Changes
+- **1.3.2**: Settings for 'anti aliasing' and 'supersampling' are disabled when 'graphics settings' are not set
 - **1.3.1**: Includes CVar `graphicsTextureResolution`
 - **1.3**: Option to enhance graphics settings on UI hide
 - **1.2**: Includes options to change what to toggle on UI hide (stored via WoW's saved variables)

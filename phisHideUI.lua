@@ -11,6 +11,8 @@ local pettracking = false
 local names_not_restored = false
 local graphics_quality_flag = false
 
+local DESCRIPTION_LONG = "The addon hides all currently displayed unit names, chat bubbles and pet tracking icons when hiding the UI (e.g. with '|cFF40C7EBAlt-Z|r'). It also includes an option to automatically switch the graphics settings to high quality (with optional supersampling) when the UI is hidden. The addon saves the current CVar values (for unit names, chat bubbles and graphics settings) on first login (or manually via slash command) to make it possible to restore the values even when the game gets closed before showing the UI again.|nUsage: '|cFF40C7EB/phishideui config|r' to open the options panel, '|cFF40C7EB/phishideui graphics|r' to manually toggle between high and default graphics, '|cFF40C7EB/phishideui backup restore|r' to restore the CVar values from the saved variables and '|cFF40C7EB/phishideui backup overwrite|r' to overwrite the backup with the current CVar values.|nAlternative slash commands: '|cFF40C7EB/phide|r' and '|cFF40C7EB/phui|r'"
+
 -- used to bind scripts and watch status of UI (shown/hidden)
 local f = CreateFrame('Frame', 'phisCheckFrame', UIParent)
 
@@ -249,7 +251,7 @@ options:SetScript('OnShow', function()
 	description_string:SetJustifyH('LEFT')
 	description_string:SetWidth(InterfaceOptionsFramePanelContainer:GetWidth() - 40)
 	description_string:SetNonSpaceWrap(true)
-	description_string:SetText(GetAddOnMetadata(addonName,'Notes'))
+	description_string:SetText(DESCRIPTION_LONG)
 	
 	--- CHECKBOXES ---
 	local checkboxes = {}
@@ -270,6 +272,17 @@ options:SetScript('OnShow', function()
 	function options.refresh()
 		for k in pairs(phis.defaults) do
 			checkboxes[k]:SetChecked(phisHideUISavedVars[k])
+		end
+		if not phisHideUISavedVars.graphics_settings then
+			checkboxes.anti_aliasing:Disable()
+			checkboxes.anti_aliasing:SetAlpha(0.5)
+			checkboxes.supersampling:Disable()
+			checkboxes.supersampling:SetAlpha(0.5)
+		else
+			checkboxes.anti_aliasing:Enable()
+			checkboxes.anti_aliasing:SetAlpha(1)
+			checkboxes.supersampling:Enable()
+			checkboxes.supersampling:SetAlpha(1)
 		end
 	end
 	
