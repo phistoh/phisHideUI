@@ -13,3 +13,8 @@ function phis.deep_copy(src, dst)
 	end
 	return dst
 end
+
+-- prints with the addon name as prefix
+function phis.print(str)
+	print('|cFFFF7D0A'..addonName..':|r '..str)
+end

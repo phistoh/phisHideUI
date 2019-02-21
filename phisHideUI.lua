@@ -38,19 +38,19 @@ end
 -- overwrites relevant cvars with those stored in the saved variables
 local function restore_backup()
 	if (phisHideUISavedVars.cvarbackup == nil) then
-		print('No backup for CVars found...')
+		phis.print('No backup for CVars found...')
 	else
 		for k,v in pairs(phisHideUISavedVars.cvarbackup) do
 			SetCVar(k,v)
 		end
-		print('CVar backup restored')
+		phis.print('CVar backup restored')
 	end
 end
 
 -- used in a slash command
 local function overwrite_backup()
 	phisHideUISavedVars.cvarbackup = backup_cvars()
-	print('Backup overwritten with current CVars')
+	phis.print('Backup overwritten with current CVars')
 end
 
 -- extra function to implement slash command for a macro
@@ -185,7 +185,7 @@ local function update_config(self, event)
 	if event == 'PLAYER_LOGIN' then
 		-- first time loading the addon
 		if not phisHideUISavedVars then
-			print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version')..' loaded for the first time.')
+			phis.print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version')..' loaded for the first time.')
 			phisHideUISavedVars = {}
 			phisHideUISavedVars.cvarbackup = backup_cvars()
 		end
@@ -262,6 +262,25 @@ options:SetScript('OnShow', function()
 	checkboxes.anti_aliasing = create_checkbox('anti_aliasing', options, checkboxes.graphics_settings, 'Anti aliasing (MSAA + CMAA)')
 	checkboxes.supersampling = create_checkbox('supersampling', options, checkboxes.anti_aliasing, 'Supersampling (2x)')
 	
+	-- overwrite OnClick for graphics settings to correctly enable/disable anti aliasing and super sampling settings
+	checkboxes.graphics_settings:SetScript('OnClick', function(self)
+		-- when 'OnClick' runs, GetChecked() already returns the new status
+		checked = self:GetChecked()
+		PlaySound(checked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+		phisHideUISavedVars.graphics_settings = checked
+		if not checked then
+			checkboxes.anti_aliasing:Disable()
+			checkboxes.anti_aliasing:SetAlpha(0.5)
+			checkboxes.supersampling:Disable()
+			checkboxes.supersampling:SetAlpha(0.5)
+		else
+			checkboxes.anti_aliasing:Enable()
+			checkboxes.anti_aliasing:SetAlpha(1)
+			checkboxes.supersampling:Enable()
+			checkboxes.supersampling:SetAlpha(1)
+		end
+	end)
+	
 	function options.default()
 		for k,v in pairs(phis.defaults) do
 			phisHideUISavedVars[k] = v
@@ -306,14 +325,14 @@ SlashCmdList['PHUI'] = function(msg)
 	elseif msg:lower() == 'graphics' then
 		graphics_quality_flag = not graphics_quality_flag
 		toggle_graphics(graphics_quality_flag)
-		print('Graphics set to '..(graphics_quality_flag and 'high' or 'default')..'.')
+		phis.print('Graphics set to '..(graphics_quality_flag and 'high' or 'default')..'.')
 	elseif msg:lower() == 'backup restore' then
 		restore_backup()
 	elseif msg:lower() == 'backup overwrite' then
 		overwrite_backup()
 	else
-		print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version'))
-		print('Toggle between graphics settings with /phui graphics')
+		phis.print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version'))
+		phis.print('Toggle between graphics settings with /phui graphics')
 	end	
 end
 
