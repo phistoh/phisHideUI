@@ -17,6 +17,7 @@ This addon does its work automatically when the UIParent frame is hidden. When t
 - **phisHideUI_Utils.lua** contains miscellaneous auxiliary functions
 
 ## Changes
+- **1.3.4**:  Update for BfA Visions of N'Zoth (8.3) (new interface number)
 - **1.3.3**:  Update for BfA Rise of Azshara (8.2) (new interface number)
 - **1.3.2**: Settings for 'anti aliasing' and 'supersampling' are disabled when 'graphics settings' are not set
 - **1.3.1**: Includes CVar `graphicsTextureResolution`
