@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 80300
 ## Title: phisHideUI
 ## Notes: The addon hides all currently displayed unit names, chat bubbles and pet tracking icons when hiding the UI (e.g. with '|cFF40C7EBAlt-Z|r').
 ## Author: phistoh
