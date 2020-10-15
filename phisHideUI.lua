@@ -66,6 +66,11 @@ local function toggle_graphics(high_quality)
 			SetCVar('renderscale', 2)
 		end
 		
+		if phisHideUISavedVars.raytracing then
+			graphics_settings['shadowRt'] = GetCVar('shadowRt')
+			SetCVar('shadowRt', 3)
+		end
+		
 		if phisHideUISavedVars.anti_aliasing then
 			graphics_settings['MSAAQuality'] = GetCVar('MSAAQuality')
 			graphics_settings['MSAAAlphaTest'] = GetCVar('MSAAAlphaTest')
@@ -84,6 +89,10 @@ local function toggle_graphics(high_quality)
 		
 		if phisHideUISavedVars.supersampling then
 			SetCVar('renderscale', graphics_settings['renderscale'])
+		end
+		
+		if phisHideUISavedVars.raytracing then
+			SetCVar('shadowRt', graphics_settings['shadowRt'])
 		end
 		
 		if phisHideUISavedVars.anti_aliasing then
@@ -261,6 +270,7 @@ options:SetScript('OnShow', function()
 	checkboxes.graphics_settings = create_checkbox('graphics_settings', options, checkboxes.pettracking_icons, 'High quality graphics settings')
 	checkboxes.anti_aliasing = create_checkbox('anti_aliasing', options, checkboxes.graphics_settings, 'Anti aliasing (MSAA + CMAA)')
 	checkboxes.supersampling = create_checkbox('supersampling', options, checkboxes.anti_aliasing, 'Supersampling (2x)')
+	checkboxes.raytracing = create_checkbox('raytracing', options, checkboxes.supersampling, 'Ray traced shadows')
 	
 	-- overwrite OnClick for graphics settings to correctly enable/disable anti aliasing and super sampling settings
 	checkboxes.graphics_settings:SetScript('OnClick', function(self)
@@ -273,11 +283,15 @@ options:SetScript('OnShow', function()
 			checkboxes.anti_aliasing:SetAlpha(0.5)
 			checkboxes.supersampling:Disable()
 			checkboxes.supersampling:SetAlpha(0.5)
+			checkboxes.raytracing:Disable()
+			checkboxes.raytracing:SetAlpha(0.5)
 		else
 			checkboxes.anti_aliasing:Enable()
 			checkboxes.anti_aliasing:SetAlpha(1)
 			checkboxes.supersampling:Enable()
 			checkboxes.supersampling:SetAlpha(1)
+			checkboxes.raytracing:Enable()
+			checkboxes.raytracing:SetAlpha(1)
 		end
 	end)
 	
@@ -297,11 +311,15 @@ options:SetScript('OnShow', function()
 			checkboxes.anti_aliasing:SetAlpha(0.5)
 			checkboxes.supersampling:Disable()
 			checkboxes.supersampling:SetAlpha(0.5)
+			checkboxes.raytracing:Disable()
+			checkboxes.raytracing:SetAlpha(0.5)
 		else
 			checkboxes.anti_aliasing:Enable()
 			checkboxes.anti_aliasing:SetAlpha(1)
 			checkboxes.supersampling:Enable()
 			checkboxes.supersampling:SetAlpha(1)
+			checkboxes.raytracing:Enable()
+			checkboxes.raytracing:SetAlpha(1)
 		end
 	end
 	
