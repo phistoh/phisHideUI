@@ -17,6 +17,7 @@ This addon does its work automatically when the UIParent frame is hidden. When t
 - **phisHideUI_Utils.lua** contains miscellaneous auxiliary functions
 
 ## Changes
+- **1.3.8**: Update for Chains of Domination (9.1.0) (new interface number)
 - **1.3.7**: Update for Shadowlands (9.0.5) (new interface number)
 - **1.3.6**: Setting to toggle ray traced shadows
 - **1.3.5**: Update for Shadowlands pre-expansion patch (9.0.1) (new interface number)
