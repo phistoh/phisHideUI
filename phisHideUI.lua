@@ -63,7 +63,7 @@ local function toggle_graphics(high_quality)
 		
 		if phisHideUISavedVars.supersampling then
 			graphics_settings['renderscale'] = GetCVar('renderscale')
-			SetCVar('renderscale', 2)
+			SetCVar('renderscale', 2.00)
 		end
 		
 		if phisHideUISavedVars.raytracing then
@@ -137,12 +137,12 @@ local function toggle_names_off()
 	--- PET TRACKING ICONS ---
 	if phisHideUISavedVars.pettracking_icons then
 		-- iterates through all trackable things to find battle pet tracking
-		for i=1,GetNumTrackingTypes() do
+		for i=1,C_Minimap.GetNumTrackingTypes() do
 			-- a is 1 if the tracking is active, else it is nil
-			n, _, a = GetTrackingInfo(i)
+			n, _, a = C_Minimap.GetTrackingInfo(i)
 			if n == 'Track Pets' and a then
 				pettracking = true
-				SetTracking(i, false)
+				C_Minimap.SetTracking(i, false)
 				break
 			elseif n == 'Track Pets' and not a then
 				pettracking = false
@@ -173,10 +173,10 @@ local function toggle_names_on()
 	
 	--- PET TRACKING ICONS ---
 	if phisHideUISavedVars.pettracking_icons and pettracking then
-		for i=1,GetNumTrackingTypes() do
-			n = GetTrackingInfo(i)
+		for i=1,C_Minimap.GetNumTrackingTypes() do
+			n = C_Minimap.GetTrackingInfo(i)
 			if n == 'Track Pets' then
-				SetTracking(i, true)
+				C_Minimap.SetTracking(i, true)
 				pettracking = false
 				break
 			end
@@ -241,7 +241,7 @@ local function create_checkbox(k, parent, anchor, text)
 	return checkbox
 end
 
-local options = CreateFrame('Frame', 'phisOptionsFrame', InterfaceOptionsFramePanelContainer)
+local options = CreateFrame('Frame', 'phisOptionsFrame', SettingsPanel.Container)
 options.name = GetAddOnMetadata(addonName,'Title')
 InterfaceOptions_AddCategory(options)
 options:SetScript('OnShow', function()
@@ -258,7 +258,7 @@ options:SetScript('OnShow', function()
 	local description_string = options:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 	description_string:SetPoint('TOPLEFT', title_string, 'BOTTOMLEFT', 0, -10)
 	description_string:SetJustifyH('LEFT')
-	description_string:SetWidth(InterfaceOptionsFramePanelContainer:GetWidth() - 40)
+	description_string:SetWidth(SettingsPanel.Container:GetWidth() - 40)
 	description_string:SetNonSpaceWrap(true)
 	description_string:SetText(DESCRIPTION_LONG)
 	

@@ -40,17 +40,21 @@ phis.unitnames = {
 }
 
 phis.graphics = {
-	['graphicsTextureFiltering'] = 6, -- 16x anisotropic texture filtering
+	['graphicsTextureFiltering'] = 5, -- 16x anisotropic texture filtering
 	['graphicsTextureResolution'] = 3, -- High texture resolution
-	['graphicsProjectedTextures'] = 2, -- Enable projected textures
-	['graphicsViewDistance'] = 10, -- Maximum view distance
-	['graphicsEnvironmentDetail'] = 10, -- Maximum environment detail
-	['graphicsGroundClutter'] = 10, -- Maximum ground clutter (corresponds to groundEffectDist = 320; in theory could be up to 500)
-	['graphicsShadowQuality'] = 6, -- Ultra high shadows
-	['graphicsLiquidDetail'] = 4, -- Ultra liquid detail
+	['graphicsProjectedTextures'] = 1, -- Enable projected textures
+	['graphicsViewDistance'] = 9, -- Maximum view distance
+	['graphicsEnvironmentDetail'] = 9, -- Maximum environment detail
+	['graphicsGroundClutter'] = 9, -- Maximum ground clutter (corresponds to groundEffectDist = 320; in theory could be up to 500)
+	['graphicsShadowQuality'] = 5, -- Ultra high shadows
+	['graphicsLiquidDetail'] = 3, -- Ultra liquid detail
 	['graphicsParticleDensity'] = 5, -- Ultra particle density
-	['graphicsSSAO'] = 5, -- Ultra screen space ambient occlusion (SSAO)
-	['graphicsDepthEffects'] = 4, -- High depth effects
+	['graphicsSpellDensity'] = 5, -- Spell density: Everything
+	['physicsLevel'] = 2, -- Player and NPC physics
+	['graphicsSSAO'] = 2, -- FidelityFX CACAO
+	['graphicsDepthEffects'] = 3, -- High depth effects
 	['graphicsLightingQuality'] = 3, -- High lighting quality
+	['graphicsComputeEffects'] = 4, -- Compute-based effects such as volumetric fog
 	['ffxGlow'] = 1, -- Enable special effects (bloom, fog, ...)
+	['sunShafts'] = 2, -- Sun shafts (no longer accesible in UI)
 }
