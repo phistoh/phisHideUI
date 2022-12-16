@@ -50,13 +50,13 @@ jobs:
         asset_path: .releases/${{ format('{0}-{1}.zip', env.ADDON_NAME, env.ADDON_VERSION) }}
         asset_name: ${{ format('{0}-{1}.zip', env.ADDON_NAME, env.ADDON_VERSION) }}
         asset_content_type: application/zip
-	
+
     # needs to set CURSEFORGE_PROJECT_ID and CURSEFORGE_API_TOKEN secret variables
     - name: Upload to CurseForge
       uses: itsmeow/curseforge-upload@v3
-        with:
-          file_path: .releases/${{ format('{0}-{1}.zip', env.ADDON_NAME, env.ADDON_VERSION) }}
-          game_endpoint: wow
-          project_id: ${{ secrets.CURSEFORGE_PROJECT_ID }}
-          token: ${{ secrets.CURSEFORGE_API_TOKEN }}
+      with:
+        file_path: .releases/${{ format('{0}-{1}.zip', env.ADDON_NAME, env.ADDON_VERSION) }}
+        game_endpoint: wow
+        project_id: ${{ secrets.CURSEFORGE_PROJECT_ID }}
+        token: ${{ secrets.CURSEFORGE_API_TOKEN }}
 		
