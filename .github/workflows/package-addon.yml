@@ -59,4 +59,3 @@ jobs:
         game_endpoint: wow
         project_id: ${{ secrets.CURSEFORGE_PROJECT_ID }}
         token: ${{ secrets.CURSEFORGE_API_TOKEN }}
-		
