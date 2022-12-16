@@ -11,6 +11,7 @@ phis.defaults = {
 	chatbubbles = true,
 	pettracking_icons = true,
 	unitnames = true,
+	softtargetinteract = true,
 	graphics_settings = false,
 	supersampling = false,
 	anti_aliasing = false,

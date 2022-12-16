@@ -8,6 +8,7 @@ local addonName, phis = ...
 local names_to_toggle = {}
 local graphics_settings = {}
 local pettracking = false
+local softtargetinteract = '0'
 local names_not_restored = false
 local graphics_quality_flag = false
 
@@ -32,6 +33,7 @@ local function backup_cvars()
 	for k,v in pairs({'chatBubbles','chatBubblesParty'}) do
 		settings[v] = GetCVar(v)
 	end
+	settings['SoftTargetInteract'] = GetCVar('SoftTargetInteract')
 	return settings
 end
 
@@ -151,6 +153,16 @@ local function toggle_names_off()
 		end
 	end
 	
+	--- INTERACT ICON / NAME ---
+	if phisHideUISavedVars.softtargetinteract then
+		-- GetCVar returns a string and not a number
+		local sti = GetCVar('SoftTargetInteract')
+		if sti ~= nil and sti ~= '0' then
+			softtargetinteract = sti
+			SetCVar('SoftTargetInteract',0)
+		end
+	end
+	
 	--- GRAPHICS SETTINGS -- 
 	if phisHideUISavedVars.graphics_settings then
 		toggle_graphics(true)
@@ -181,6 +193,11 @@ local function toggle_names_on()
 				break
 			end
 		end
+	end
+	
+	--- INTERACT ICON / NAME ---
+	if phisHideUISavedVars.softtargetinteract then
+		SetCVar('SoftTargetInteract',softtargetinteract)
 	end
 	
 	--- GRAPHICS SETTINGS -- 
@@ -267,7 +284,8 @@ options:SetScript('OnShow', function()
 	checkboxes.unitnames = create_checkbox('unitnames', options, description_string, 'Unit names')
 	checkboxes.chatbubbles = create_checkbox('chatbubbles', options, checkboxes.unitnames, 'Chat bubbles')
 	checkboxes.pettracking_icons = create_checkbox('pettracking_icons', options, checkboxes.chatbubbles, 'Battle pet tracking icons')
-	checkboxes.graphics_settings = create_checkbox('graphics_settings', options, checkboxes.pettracking_icons, 'High quality graphics settings')
+	checkboxes.softtargetinteract = create_checkbox('softtargetinteract', options, checkboxes.pettracking_icons, 'Soft target interact icon (and unit name)')
+	checkboxes.graphics_settings = create_checkbox('graphics_settings', options, checkboxes.softtargetinteract, 'High quality graphics settings')
 	checkboxes.anti_aliasing = create_checkbox('anti_aliasing', options, checkboxes.graphics_settings, 'Anti aliasing (MSAA + CMAA)')
 	checkboxes.supersampling = create_checkbox('supersampling', options, checkboxes.anti_aliasing, 'Supersampling (2x)')
 	checkboxes.raytracing = create_checkbox('raytracing', options, checkboxes.supersampling, 'Ray traced shadows')

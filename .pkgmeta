@@ -1,0 +1,6 @@
+ignore:
+  - "*.md"
+
+manual-changelog:
+  filename: .changes
+  markup-type: markdown
