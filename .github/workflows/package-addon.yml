@@ -3,7 +3,7 @@ name: Package World of Warcraft addon
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
   package:
@@ -11,31 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
-    - name: Get name of addon
-      id: init
+    - name: Set environment variables
       run: |
-        addon_name=$(ls *.toc)
-        addon_name=$(basename $addon_name .toc)
-        # tag_name=${addon_name}-${{github.event.inputs.version}}
-        tag_name=${addon_name}-${{ steps.get_version.outputs.VERSION }}
-        echo "::set-output name=addon_name::${addon_name}"
-        echo "::set-output name=tag_name::${tag_name}"
+        echo "ADDON_VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+        echo "ADDON_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
 
     - name: Make folder for zips
       run: |
-        mkdir -p .releases/${{steps.init.outputs.addon_name}}
-        rsync -r --exclude '.*' --exclude 'README.md' . .releases/${{steps.init.outputs.addon_name}}
+        mkdir -p .releases/${{ env.ADDON_NAME }}
+        rsync -r --exclude '.*' --exclude 'README.md' . .releases/${{ env.ADDON_NAME }}
 
     - name: Create retail zip
       run: |
         cd .releases
-        zip -9 -r ${{steps.init.outputs.tag_name}}.zip ${{steps.init.outputs.addon_name}}
+        zip -9 -r ${{ format('{0}-{1}.zip', env.ADDON_NAME, env.ADDON_VERSION) }} ${{ env.ADDON_NAME }}
         cd ..
 
     - name: Tag this version
@@ -44,9 +35,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.get_version.outputs.VERSION }}
-        release_name: ${{steps.init.outputs.addon_name}} ${{ steps.get_version.outputs.VERSION }}
-        body: ${{steps.init.outputs.addon_name}} ${{ steps.get_version.outputs.VERSION }}
+        tag_name: ${{ env.ADDON_VERSION }}
+        release_name: ${{ format('{0} {1}', env.ADDON_NAME, env.ADDON_VERSION) }}
+        body: ${{ format('{0} {1}', env.ADDON_NAME, env.ADDON_VERSION) }}
         draft: false
         prerelease: false
 
@@ -56,6 +47,16 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: .releases/${{steps.init.outputs.tag_name}}.zip
-        asset_name: ${{steps.init.outputs.tag_name}}.zip
+        asset_path: .releases/${{ format('{0}-{1}.zip', env.ADDON_NAME, env.ADDON_VERSION) }}
+        asset_name: ${{ format('{0}-{1}.zip', env.ADDON_NAME, env.ADDON_VERSION) }}
         asset_content_type: application/zip
+	
+    # needs to set CURSEFORGE_PROJECT_ID and CURSEFORGE_API_TOKEN secret variables
+    - name: Upload to CurseForge
+      uses: itsmeow/curseforge-upload@v3
+        with:
+          file_path: .releases/${{ format('{0}-{1}.zip', env.ADDON_NAME, env.ADDON_VERSION) }}
+          game_endpoint: wow
+          project_id: ${{ secrets.CURSEFORGE_PROJECT_ID }}
+          token: ${{ secrets.CURSEFORGE_API_TOKEN }}
+		
