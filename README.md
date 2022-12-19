@@ -10,6 +10,16 @@ This addon does its work automatically when the UIParent frame is hidden. When t
 
 (The commands `/phide` and `/phui` can be used instead of `/phishideui`.)
 
+## Screenshots
+#### General Behaviour
+![Behaviour](.github/phishideui.jpg?raw=true)
+
+#### Enhancing graphics settings
+![Enhancing graphics settings](.github/phui2.jpg?raw=true)
+
+#### Options panel
+![Options panel](.github/phui3.jpg?raw=true)
+
 ## File Description
 - **phisHideUI.lua** contains the main code
 - **phisHideUI.toc** is the standard WoW table-of-contents file containing addon information
