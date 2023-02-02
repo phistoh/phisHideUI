@@ -1,3 +1,6 @@
+## v1.3.11
+- Update for Dragonflight (10.0.5)
+
 ## v1.3.10
 - Hides the soft target interact icon (and name)
 
