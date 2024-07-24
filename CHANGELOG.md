@@ -1,3 +1,7 @@
+## v1.3.15
+- Update for The War Within (11.0.0) (new interface number)
+- Options panel no longer uses deprecated `InterfaceOptions_AddCategory` API
+
 ## v1.3.14
 - Update for Dark Heart (10.2.7) (new interface number)
 

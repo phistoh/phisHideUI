@@ -260,7 +260,8 @@ end
 
 local options = CreateFrame('Frame', 'phisOptionsFrame', SettingsPanel.Container)
 options.name = GetAddOnMetadata(addonName,'Title')
-InterfaceOptions_AddCategory(options)
+local category = Settings.RegisterCanvasLayoutCategory(options, options.name)
+Settings.RegisterAddOnCategory(category)
 options:SetScript('OnShow', function()
 
 	--- HEADER --
