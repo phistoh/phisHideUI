@@ -211,7 +211,7 @@ local function update_config(self, event)
 	if event == 'PLAYER_LOGIN' then
 		-- first time loading the addon
 		if not phisHideUISavedVars then
-			phis.print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version')..' loaded for the first time.')
+			phis.print(C_AddOns.GetAddOnMetadata(addonName,'Title')..' v'..C_AddOns.GetAddOnMetadata(addonName,'Version')..' loaded for the first time.')
 			phisHideUISavedVars = {}
 			phisHideUISavedVars.cvarbackup = backup_cvars()
 		end
@@ -259,7 +259,7 @@ local function create_checkbox(k, parent, anchor, text)
 end
 
 local options = CreateFrame('Frame', 'phisOptionsFrame', SettingsPanel.Container)
-options.name = GetAddOnMetadata(addonName,'Title')
+options.name = C_AddOns.GetAddOnMetadata(addonName,'Title')
 local category = Settings.RegisterCanvasLayoutCategory(options, options.name)
 Settings.RegisterAddOnCategory(category)
 options:SetScript('OnShow', function()
@@ -267,11 +267,11 @@ options:SetScript('OnShow', function()
 	--- HEADER --
 	local title_string = options:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 	title_string:SetPoint('TOPLEFT', 10, -10)
-	title_string:SetText(GetAddOnMetadata(addonName,'Title'))
+	title_string:SetText(C_AddOns.GetAddOnMetadata(addonName,'Title'))
 	
 	local version_string = options:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
 	version_string:SetPoint('BOTTOMLEFT', title_string, 'BOTTOMRIGHT', 4, 0)
-	version_string:SetText('v'..GetAddOnMetadata(addonName,'Version'))
+	version_string:SetText('v'..C_AddOns.GetAddOnMetadata(addonName,'Version'))
 	
 	local description_string = options:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 	description_string:SetPoint('TOPLEFT', title_string, 'BOTTOMLEFT', 0, -10)
@@ -368,7 +368,7 @@ SlashCmdList['PHUI'] = function(msg)
 	elseif msg:lower() == 'backup overwrite' then
 		overwrite_backup()
 	else
-		phis.print(GetAddOnMetadata(addonName,'Title')..' v'..GetAddOnMetadata(addonName,'Version'))
+		phis.print(C_AddOns.GetAddOnMetadata(addonName,'Title')..' v'..C_AddOns.GetAddOnMetadata(addonName,'Version'))
 		phis.print('Toggle between graphics settings with /phui graphics')
 	end	
 end

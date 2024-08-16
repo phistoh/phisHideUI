@@ -1,3 +1,7 @@
+## v1.3.16
+- Update for The War Within (11.0.2) (new interface number)
+- Changed deprecated function `GetAddOnMetadata` to `C_AddOns.GetAddOnMetadata`
+
 ## v1.3.15
 - Update for The War Within (11.0.0) (new interface number)
 - Options panel no longer uses deprecated `InterfaceOptions_AddCategory` API
