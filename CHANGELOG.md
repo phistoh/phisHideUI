@@ -1,3 +1,6 @@
+## v1.3.17
+- Update for Ghosts of K'aresh (11.2) (new interface number)
+
 ## v1.3.16
 - Update for The War Within (11.0.2) (new interface number)
 - Changed deprecated function `GetAddOnMetadata` to `C_AddOns.GetAddOnMetadata`
