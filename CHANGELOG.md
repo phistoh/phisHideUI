@@ -1,3 +1,6 @@
+## v1.3.18
+- Update for Midnight (12.0.1) (new interface number)
+
 ## v1.3.17
 - Update for Ghosts of K'aresh (11.2) (new interface number)
 
